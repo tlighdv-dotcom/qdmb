@@ -5,8 +5,9 @@ Web tĩnh chạy trên GitHub Pages; dữ liệu, ảnh và đăng nhập admin 
 ## Tính năng
 
 - Trang công khai: xem danh sách thành viên, tìm theo ID/tên và tự cập nhật khi admin thay đổi dữ liệu.
-- Trang admin: đăng nhập bằng email + mật khẩu, thêm/sửa/xóa thành viên và upload ảnh profile.
-- Dữ liệu thành viên: ID, tên, Facebook, ảnh profile, ngày vào.
+- Trang admin: đăng nhập bằng email + mật khẩu, thêm/sửa/xóa thành viên, upload ảnh profile, đổi trạng thái và quản lý bạn bè chơi chung.
+- Trạng thái: `Đạt`, `Không đạt`, `Thoát`, có lịch sử 10 thay đổi gần nhất.
+- Bạn bè chơi chung: liên kết trực tiếp giữa các thành viên đã có trong hệ thống, tính hai chiều, có thống kê số người có bạn và các nhóm chơi cùng.
 - Bảo mật: khách chỉ được đọc; quyền ghi yêu cầu tài khoản Supabase Auth có `app_metadata.role = admin`.
 
 ## Supabase hiện tại
@@ -15,16 +16,17 @@ Frontend đã được cấu hình sẵn với project Supabase của QDMB bằn
 
 Schema chính nằm trong `supabase.sql` và gồm:
 
-- bảng `public.members`
+- `public.members`
+- `public.member_status_logs`
+- `public.member_friends`
 - Row Level Security
 - Storage bucket `member-profiles`
-- policy chỉ cho admin ghi dữ liệu / upload ảnh
-- Supabase Realtime cho bảng `members`
+- Supabase Realtime cho thành viên, trạng thái và quan hệ bạn bè
 
 ## Tạo tài khoản quản trị
 
-1. Trong Supabase Dashboard mở **Authentication → Users → Add user** và tạo một user email/password.
-2. Trong **SQL Editor** chạy lệnh dưới đây, thay email bằng tài khoản vừa tạo:
+1. Trong Supabase Dashboard mở **Authentication → Users → Add user** và tạo user email/password.
+2. Trong **SQL Editor** gắn role admin cho tài khoản:
 
 ```sql
 update auth.users
@@ -32,23 +34,18 @@ set raw_app_meta_data = coalesce(raw_app_meta_data, '{}'::jsonb) || '{"role":"ad
 where email = 'YOUR_ADMIN_EMAIL';
 ```
 
-3. Đăng nhập tại `admin.html` bằng email và mật khẩu vừa tạo.
+3. Đăng nhập tại `admin.html`.
 
-> Quyền admin thực tế được kiểm tra ở database bằng `app_metadata.role = admin`, không dựa vào email nằm trong source frontend.
-
-## Bật GitHub Pages
+## GitHub Pages
 
 Repo: `tlighdv-dotcom/qdmb`
-
-Vào **Settings → Pages → Build and deployment → Deploy from a branch**:
 
 - Branch: `main`
 - Folder: `/ (root)`
 
-Sau khi deploy:
+Public: `https://tlighdv-dotcom.github.io/qdmb/`
 
-- Public: `https://tlighdv-dotcom.github.io/qdmb/`
-- Admin: `https://tlighdv-dotcom.github.io/qdmb/admin.html`
+Admin: `https://tlighdv-dotcom.github.io/qdmb/admin.html`
 
 ## Test
 
