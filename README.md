@@ -1,41 +1,42 @@
 # QDMB — Báo cáo tuyển thành viên quân đoàn
 
-Web tĩnh chạy trên GitHub Pages, dữ liệu/ảnh/login admin dùng Supabase.
+Web tĩnh chạy trên GitHub Pages; dữ liệu, ảnh và đăng nhập admin dùng Supabase.
 
-## Có gì
+## Tính năng
 
-- Link công khai: xem danh sách thành viên, tìm theo ID/tên, tự cập nhật khi admin sửa.
-- Link admin: đăng nhập bằng mật khẩu, thêm/sửa/xóa thành viên, upload ảnh profile.
-- Dữ liệu: ID, tên, Facebook, ảnh profile, ngày vào.
-- Bảo mật: khách chỉ đọc; thao tác ghi được kiểm soát bằng Supabase Auth + Row Level Security.
+- Trang công khai: xem danh sách thành viên, tìm theo ID/tên và tự cập nhật khi admin thay đổi dữ liệu.
+- Trang admin: đăng nhập bằng email + mật khẩu, thêm/sửa/xóa thành viên và upload ảnh profile.
+- Dữ liệu thành viên: ID, tên, Facebook, ảnh profile, ngày vào.
+- Bảo mật: khách chỉ được đọc; quyền ghi yêu cầu tài khoản Supabase Auth có `app_metadata.role = admin`.
 
-## 1. Tạo Supabase project
+## Supabase hiện tại
 
-Tạo project Supabase Free, sau đó mở **SQL Editor**, copy toàn bộ `supabase.sql` và thay tất cả `admin@example.com` bằng email admin thật trước khi chạy.
+Frontend đã được cấu hình sẵn với project Supabase của QDMB bằng publishable key. Không đưa service-role hoặc secret key vào source GitHub.
 
-## 2. Tạo tài khoản admin
+Schema chính nằm trong `supabase.sql` và gồm:
 
-Trong Supabase mở **Authentication → Users → Add user**, tạo user với đúng email ở bước 1 và mật khẩu bạn muốn dùng cho `admin.html`.
+- bảng `public.members`
+- Row Level Security
+- Storage bucket `member-profiles`
+- policy chỉ cho admin ghi dữ liệu / upload ảnh
+- Supabase Realtime cho bảng `members`
 
-Bạn có thể tắt public sign-up trong Authentication settings vì website này không cần người dùng tự đăng ký.
+## Tạo tài khoản quản trị
 
-## 3. Điền config.js
+1. Trong Supabase Dashboard mở **Authentication → Users → Add user** và tạo một user email/password.
+2. Trong **SQL Editor** chạy lệnh dưới đây, thay email bằng tài khoản vừa tạo:
 
-Vào **Project Settings / API** của Supabase và điền:
-
-```js
-window.QDMB_CONFIG = Object.freeze({
-  SUPABASE_URL: 'https://PROJECT.supabase.co',
-  SUPABASE_KEY: 'YOUR_PUBLISHABLE_OR_ANON_KEY',
-  ADMIN_EMAIL: 'email-admin@example.com',
-  GUILD_NAME: 'CARTOON NETWORK',
-  PAGE_TITLE: 'BÁO CÁO TUYỂN THÀNH VIÊN MỚI',
-});
+```sql
+update auth.users
+set raw_app_meta_data = coalesce(raw_app_meta_data, '{}'::jsonb) || '{"role":"admin"}'::jsonb
+where email = 'YOUR_ADMIN_EMAIL';
 ```
 
-`SUPABASE_KEY` ở đây phải là key publishable/anon dùng được trong trình duyệt. Không đưa khóa bí mật cấp server vào source GitHub.
+3. Đăng nhập tại `admin.html` bằng email và mật khẩu vừa tạo.
 
-## 4. Bật GitHub Pages
+> Quyền admin thực tế được kiểm tra ở database bằng `app_metadata.role = admin`, không dựa vào email nằm trong source frontend.
+
+## Bật GitHub Pages
 
 Repo: `tlighdv-dotcom/qdmb`
 
@@ -44,15 +45,15 @@ Vào **Settings → Pages → Build and deployment → Deploy from a branch**:
 - Branch: `main`
 - Folder: `/ (root)`
 
-Sau khi GitHub Pages deploy:
+Sau khi deploy:
 
-- Trang xem: `https://tlighdv-dotcom.github.io/qdmb/`
-- Trang admin: `https://tlighdv-dotcom.github.io/qdmb/admin.html`
+- Public: `https://tlighdv-dotcom.github.io/qdmb/`
+- Admin: `https://tlighdv-dotcom.github.io/qdmb/admin.html`
 
-## Test local
+## Test
 
 ```bash
 npm test
 ```
 
-Không cần `npm install` vì test dùng Node.js built-in và website load Supabase JS v2 trực tiếp từ CDN.
+Không cần `npm install`: test dùng Node.js built-in; website tải Supabase JS v2 trực tiếp từ CDN.
