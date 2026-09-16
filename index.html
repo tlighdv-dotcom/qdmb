@@ -3,34 +3,60 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0b1020">
+  <meta name="theme-color" content="#f5f7fb">
   <meta name="description" content="Báo cáo tuyển thành viên mới quân đoàn">
   <title>Thành viên mới</title>
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body class="public-page">
-  <div class="ambient ambient-one"></div>
-  <div class="ambient ambient-two"></div>
   <main class="shell">
-    <header class="hero glass">
-      <div class="hero-copy">
-        <span class="eyebrow">QUÂN ĐOÀN</span>
+    <header class="site-header">
+      <div>
+        <span class="kicker">BÁO CÁO QUÂN ĐOÀN</span>
         <h1 id="guildName">CARTOON NETWORK</h1>
         <p id="pageTitle">Báo cáo tuyển thành viên mới</p>
       </div>
-      <div class="hero-stat" aria-label="Tổng thành viên mới"><strong id="memberCount">0</strong><span>thành viên mới</span></div>
+      <div class="header-meta">
+        <span class="live-dot"><i></i> Dữ liệu trực tiếp</span>
+        <div class="count-card"><strong id="memberCount">0</strong><span>thành viên</span></div>
+      </div>
     </header>
-    <section class="toolbar glass" aria-label="Tìm kiếm thành viên">
-      <label class="search-box"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Tìm theo tên hoặc ID..." autocomplete="off"></label>
-      <div class="live-badge"><i></i> Tự động cập nhật</div>
+
+    <section class="summary-strip" aria-label="Tổng quan trạng thái">
+      <div><span>Tổng</span><strong id="summaryTotal">0</strong></div>
+      <div><span>Đạt</span><strong id="summaryPassed">0</strong></div>
+      <div><span>Không đạt</span><strong id="summaryFailed">0</strong></div>
+      <div><span>Thoát</span><strong id="summaryLeft">0</strong></div>
     </section>
+
     <div id="statusBox" class="status-box" hidden></div>
-    <section id="memberGrid" class="member-grid" aria-live="polite">
-      <article class="skeleton card"></article><article class="skeleton card"></article><article class="skeleton card"></article>
-    </section>
-    <section id="emptyState" class="empty-state glass" hidden><div class="empty-icon">🐻</div><h2>Chưa có thành viên phù hợp</h2><p>Thử từ khóa khác hoặc quay lại sau.</p></section>
-    <footer class="footer">Danh sách được đồng bộ trực tiếp từ hệ thống quản lý quân đoàn.</footer>
+
+    <div class="content-layout">
+      <section class="panel members-panel">
+        <div class="panel-head">
+          <div><h2>Danh sách thành viên</h2><p>Thông tin tuyển mới và trạng thái hiện tại.</p></div>
+          <label class="search-box"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Tìm tên hoặc ID..." autocomplete="off"></label>
+        </div>
+        <section id="memberGrid" class="member-grid" aria-live="polite">
+          <article class="skeleton"></article><article class="skeleton"></article><article class="skeleton"></article>
+        </section>
+        <section id="emptyState" class="empty-state" hidden><h3>Chưa có thành viên phù hợp</h3><p>Thử từ khóa khác.</p></section>
+      </section>
+
+      <aside class="panel activity-panel">
+        <div class="panel-head compact"><div><h2>Theo dõi gần đây</h2><p>10 lần cập nhật trạng thái mới nhất.</p></div></div>
+        <div id="recentActivity" class="activity-list" aria-live="polite"><div class="activity-empty">Chưa có cập nhật trạng thái.</div></div>
+      </aside>
+    </div>
+
+    <footer class="footer">Dữ liệu được đồng bộ trực tiếp từ hệ thống quản lý quân đoàn.</footer>
   </main>
+
+  <dialog id="imageModal" class="image-modal">
+    <button type="button" class="modal-close" data-close-image aria-label="Đóng ảnh">×</button>
+    <img id="imageModalImg" alt="Ảnh profile phóng to">
+  </dialog>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
   <script type="module" src="assets/public.js"></script>

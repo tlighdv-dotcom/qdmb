@@ -6,7 +6,7 @@ const read = (path) => fs.readFileSync(new URL(`../${path}`, import.meta.url), '
 
 test('public page exposes required DOM hooks and loads Supabase v2', () => {
   const html = read('index.html');
-  for (const id of ['memberGrid', 'searchInput', 'memberCount', 'statusBox']) {
+  for (const id of ['memberGrid', 'searchInput', 'memberCount', 'statusBox', 'recentActivity', 'imageModal', 'imageModalImg']) {
     assert.match(html, new RegExp(`id=["']${id}["']`));
   }
   assert.match(html, /@supabase\/supabase-js@2/);
@@ -25,7 +25,7 @@ test('config contains browser-safe placeholders only', () => {
 
 test('admin page exposes login and CRUD hooks', () => {
   const html = read('admin.html');
-  for (const id of ['loginForm', 'emailInput', 'passwordInput', 'adminPanel', 'memberForm', 'adminMemberList', 'logoutBtn']) {
+  for (const id of ['loginForm', 'emailInput', 'passwordInput', 'adminPanel', 'memberForm', 'adminMemberList', 'logoutBtn', 'memberStatusInput', 'adminRecentActivity', 'imageModal', 'imageModalImg']) {
     assert.match(html, new RegExp(`id=["']${id}["']`));
   }
   assert.match(html, /type=["']password["']/);
@@ -41,4 +41,9 @@ test('Supabase SQL enables RLS, anon select, admin-only writes, storage policies
   assert.match(sql, /member-profiles/i);
   assert.match(sql, /storage\.objects/i);
   assert.match(sql, /supabase_realtime/i);
+  assert.match(sql, /status\s+text/i);
+  assert.match(sql, /khong_dat/i);
+  assert.match(sql, /member_status_logs/i);
+  assert.match(sql, /log_member_status_change/i);
+  assert.match(sql, /revoke\s+execute\s+on\s+function\s+public\.log_member_status_change\(\)\s+from\s+public,\s*anon,\s*authenticated/i);
 });

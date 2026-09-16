@@ -3,115 +3,70 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0b1020">
+  <meta name="theme-color" content="#f5f7fb">
   <meta name="robots" content="noindex,nofollow">
   <title>Quản trị thành viên</title>
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body class="admin-page">
-  <div class="ambient ambient-one"></div>
-  <div class="ambient ambient-two"></div>
-
   <main class="shell admin-shell">
     <section id="loginView" class="login-wrap">
-      <form id="loginForm" class="login-card glass" autocomplete="on">
-        <div class="login-logo">QD</div>
-        <span class="eyebrow">ADMIN</span>
+      <form id="loginForm" class="login-card panel" autocomplete="on">
+        <div class="brand-mark">QD</div>
+        <span class="kicker">QUẢN TRỊ</span>
         <h1>Quản lý thành viên</h1>
-        <p>Đăng nhập bằng tài khoản quản trị để tiếp tục.</p>
-        <label class="field">
-          <span>Email quản trị</span>
-          <input id="emailInput" type="email" required autocomplete="username" inputmode="email" placeholder="admin@example.com">
-        </label>
-        <label class="field">
-          <span>Mật khẩu</span>
-          <input id="passwordInput" type="password" required autocomplete="current-password" placeholder="••••••••">
-        </label>
+        <p>Đăng nhập để cập nhật danh sách và trạng thái.</p>
+        <label class="field"><span>Email quản trị</span><input id="emailInput" type="email" required autocomplete="username" inputmode="email" placeholder="admin@example.com"></label>
+        <label class="field"><span>Mật khẩu</span><input id="passwordInput" type="password" required autocomplete="current-password" placeholder="••••••••"></label>
         <button id="loginBtn" class="btn btn-primary btn-block" type="submit">Đăng nhập</button>
         <div id="loginError" class="form-message error" hidden></div>
-        <a class="back-link" href="./">← Xem trang công khai</a>
+        <a class="back-link" href="./">← Quay lại trang xem</a>
       </form>
     </section>
 
     <section id="adminPanel" hidden>
-      <header class="admin-topbar glass">
-        <div>
-          <span class="eyebrow">QUẢN TRỊ</span>
-          <h1>Thành viên mới</h1>
-        </div>
-        <div class="topbar-actions">
-          <a href="./" class="btn btn-ghost">Trang xem</a>
-          <button id="logoutBtn" type="button" class="btn btn-danger-soft">Đăng xuất</button>
-        </div>
+      <header class="admin-topbar">
+        <div><span class="kicker">QUẢN TRỊ QUÂN ĐOÀN</span><h1>Thành viên mới</h1><p>Thêm thành viên, cập nhật trạng thái và theo dõi thay đổi.</p></div>
+        <div class="topbar-actions"><a href="./" class="btn btn-secondary">Trang xem</a><button id="logoutBtn" type="button" class="btn btn-secondary">Đăng xuất</button></div>
       </header>
 
       <div id="adminStatus" class="status-box" hidden></div>
 
       <div class="admin-grid">
-        <section class="form-card glass">
-          <div class="section-heading">
-            <div>
-              <span class="eyebrow">THÔNG TIN</span>
-              <h2 id="formTitle">Thêm thành viên</h2>
-            </div>
-            <button id="cancelEditBtn" type="button" class="text-btn" hidden>Hủy sửa</button>
-          </div>
-
+        <section class="panel form-card">
+          <div class="panel-head compact"><div><h2 id="formTitle">Thêm thành viên</h2><p>Nhập thông tin cơ bản.</p></div><button id="cancelEditBtn" type="button" class="text-btn" hidden>Hủy sửa</button></div>
           <form id="memberForm" novalidate>
             <div class="field-row">
-              <label class="field">
-                <span>ID</span>
-                <input id="idCodeInput" name="id_code" required placeholder="VD: 1044301822">
-                <small class="field-error" data-error-for="id_code"></small>
-              </label>
-              <label class="field">
-                <span>Ngày vào</span>
-                <input id="joinedAtInput" name="joined_at" type="date" required>
-                <small class="field-error" data-error-for="joined_at"></small>
-              </label>
+              <label class="field"><span>ID</span><input id="idCodeInput" name="id_code" required placeholder="VD: 1044301822"><small class="field-error" data-error-for="id_code"></small></label>
+              <label class="field"><span>Ngày vào</span><input id="joinedAtInput" name="joined_at" type="date" required><small class="field-error" data-error-for="joined_at"></small></label>
             </div>
-
-            <label class="field">
-              <span>Tên thành viên</span>
-              <input id="nameInput" name="name" required placeholder="Tên hiển thị">
-              <small class="field-error" data-error-for="name"></small>
-            </label>
-
-            <label class="field">
-              <span>Facebook</span>
-              <input id="facebookInput" name="facebook_url" type="url" inputmode="url" required placeholder="facebook.com/tennguoidung">
-              <small class="field-error" data-error-for="facebook_url"></small>
-            </label>
-
-            <label class="upload-field">
-              <input id="profileInput" type="file" accept="image/jpeg,image/png,image/webp">
-              <span class="upload-preview" id="uploadPreview"><b>＋</b></span>
-              <span class="upload-copy">
-                <strong>Ảnh profile</strong>
-                <small>JPG, PNG hoặc WebP · tối đa 5 MB</small>
-              </span>
-            </label>
-
+            <label class="field"><span>Tên thành viên</span><input id="nameInput" name="name" required placeholder="Tên hiển thị"><small class="field-error" data-error-for="name"></small></label>
+            <label class="field"><span>Facebook</span><input id="facebookInput" name="facebook_url" type="url" inputmode="url" required placeholder="facebook.com/tennguoidung"><small class="field-error" data-error-for="facebook_url"></small></label>
+            <label class="field"><span>Trạng thái</span><select id="memberStatusInput" name="status"><option value="dat">Đạt</option><option value="khong_dat">Không đạt</option><option value="thoat">Thoát</option></select></label>
+            <label class="upload-field"><input id="profileInput" type="file" accept="image/jpeg,image/png,image/webp"><span class="upload-preview" id="uploadPreview"><b>＋</b></span><span><strong>Ảnh profile</strong><small>JPG, PNG hoặc WebP · tối đa 5 MB</small></span></label>
             <button id="saveBtn" class="btn btn-primary btn-block" type="submit">Lưu thành viên</button>
           </form>
         </section>
 
-        <section class="list-card glass">
-          <div class="section-heading list-heading">
-            <div>
-              <span class="eyebrow">DANH SÁCH</span>
-              <h2>Đã tuyển <span id="adminCount">0</span></h2>
-            </div>
-            <label class="mini-search">
-              <span>⌕</span>
-              <input id="adminSearchInput" type="search" placeholder="Tìm...">
-            </label>
-          </div>
-          <div id="adminMemberList" class="admin-member-list"></div>
-        </section>
+        <div class="admin-main-column">
+          <section class="panel list-card">
+            <div class="panel-head"><div><h2>Danh sách <span class="muted-count">(<span id="adminCount">0</span>)</span></h2><p>Đổi trạng thái trực tiếp tại từng thành viên.</p></div><label class="search-box compact-search"><span>⌕</span><input id="adminSearchInput" type="search" placeholder="Tìm..."></label></div>
+            <div id="adminMemberList" class="admin-member-list"></div>
+          </section>
+
+          <section class="panel admin-activity-card">
+            <div class="panel-head compact"><div><h2>Theo dõi gần đây</h2><p>Lịch sử 10 lần đổi trạng thái mới nhất.</p></div></div>
+            <div id="adminRecentActivity" class="activity-list"><div class="activity-empty">Chưa có cập nhật trạng thái.</div></div>
+          </section>
+        </div>
       </div>
     </section>
   </main>
+
+  <dialog id="imageModal" class="image-modal">
+    <button type="button" class="modal-close" data-close-image aria-label="Đóng ảnh">×</button>
+    <img id="imageModalImg" alt="Ảnh profile phóng to">
+  </dialog>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
