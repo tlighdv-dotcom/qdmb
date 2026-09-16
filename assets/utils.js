@@ -1,118 +1,18 @@
 export function stripDiacritics(value = '') {
-  return String(value)
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/g, 'd')
-    .replace(/Đ/g, 'D');
+  return String(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D');
 }
-
-export function normalizeFacebookUrl(value = '') {
-  const input = String(value).trim();
-  if (!input) return '';
-  const withProtocol = /^https?:\/\//i.test(input) ? input : `https://${input}`;
-  try {
-    const url = new URL(withProtocol);
-    if (!['http:', 'https:'].includes(url.protocol)) return '';
-    const host = url.hostname.toLowerCase().replace(/^www\./, '');
-    if (!['facebook.com', 'm.facebook.com', 'fb.com'].includes(host)) return '';
-    return url.toString().replace(/\/$/, '');
-  } catch {
-    return '';
-  }
-}
-
-export function formatDateVN(value) {
-  if (!value) return '—';
-  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value));
-  if (!match) return '—';
-  return `${match[3]}/${match[2]}/${match[1]}`;
-}
-
-export function validateMember(member = {}) {
-  const errors = {};
-  const idCode = String(member.id_code ?? '').trim();
-  const name = String(member.name ?? '').trim();
-  const facebookUrl = normalizeFacebookUrl(member.facebook_url ?? '');
-  const joinedAt = String(member.joined_at ?? '').trim();
-  const status = normalizeMemberStatus(member.status ?? 'dat');
-
-  if (!idCode) errors.id_code = 'Vui lòng nhập ID.';
-  if (!name) errors.name = 'Vui lòng nhập tên.';
-  if (!facebookUrl) errors.facebook_url = 'Link Facebook không hợp lệ.';
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(joinedAt)) errors.joined_at = 'Vui lòng chọn ngày vào.';
-
-  return {
-    ok: Object.keys(errors).length === 0,
-    errors,
-    value: {
-      id_code: idCode,
-      name,
-      facebook_url: facebookUrl,
-      joined_at: joinedAt,
-      status,
-    },
-  };
-}
-
-export function matchesMemberSearch(member = {}, query = '') {
-  const needle = stripDiacritics(String(query).trim().toLowerCase());
-  if (!needle) return true;
-  const haystack = stripDiacritics(`${member.id_code ?? ''} ${member.name ?? ''}`.toLowerCase());
-  return haystack.includes(needle);
-}
-
-export function safeFileName(fileName = '') {
-  const raw = String(fileName).trim();
-  const lastDot = raw.lastIndexOf('.');
-  const ext = lastDot > -1 ? raw.slice(lastDot + 1).toLowerCase().replace(/[^a-z0-9]/g, '') : '';
-  const base = lastDot > -1 ? raw.slice(0, lastDot) : raw;
-  const cleanedBase = stripDiacritics(base)
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '') || 'profile';
-  return ext ? `${cleanedBase}.${ext}` : cleanedBase;
-}
-
-const MEMBER_STATUS_VALUES = new Set(['dat', 'khong_dat', 'thoat']);
-
-export function normalizeMemberStatus(value = '') {
-  const status = String(value).trim().toLowerCase();
-  return MEMBER_STATUS_VALUES.has(status) ? status : 'dat';
-}
-
-export function memberStatusLabel(value = '') {
-  return {
-    dat: 'Đạt',
-    khong_dat: 'Không đạt',
-    thoat: 'Thoát',
-  }[normalizeMemberStatus(value)];
-}
-
-export function memberStatusClass(value = '') {
-  return {
-    dat: 'status-dat',
-    khong_dat: 'status-khong-dat',
-    thoat: 'status-thoat',
-  }[normalizeMemberStatus(value)];
-}
-
-export function formatStatusTransition(oldStatus, newStatus) {
-  return `${memberStatusLabel(oldStatus)} → ${memberStatusLabel(newStatus)}`;
-}
-
-export function formatDateTimeVN(value) {
-  if (!value) return '—';
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return '—';
-  const parts = new Intl.DateTimeFormat('en-GB', {
-    timeZone: 'Asia/Ho_Chi_Minh',
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  }).formatToParts(date);
-  const get = (type) => parts.find((part) => part.type === type)?.value || '';
-  return `${get('day')}/${get('month')}/${get('year')}, ${get('hour')}:${get('minute')}`;
-}
+export function normalizeFacebookUrl(value = '') { const input=String(value).trim(); if(!input)return''; const withProtocol=/^https?:\/\//i.test(input)?input:`https://${input}`; try{const url=new URL(withProtocol);if(!['http:','https:'].includes(url.protocol))return'';const host=url.hostname.toLowerCase().replace(/^www\./,'');if(!['facebook.com','m.facebook.com','fb.com'].includes(host))return'';return url.toString().replace(/\/$/,'')}catch{return''} }
+export function formatDateVN(value){if(!value)return'—';const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value));return m?`${m[3]}/${m[2]}/${m[1]}`:'—'}
+const MEMBER_STATUS_VALUES=new Set(['dat','khong_dat','thoat']);
+export function normalizeMemberStatus(value=''){const status=String(value).trim().toLowerCase();return MEMBER_STATUS_VALUES.has(status)?status:'dat'}
+export function memberStatusLabel(value=''){return{dat:'Đạt',khong_dat:'Không đạt',thoat:'Thoát'}[normalizeMemberStatus(value)]}
+export function memberStatusClass(value=''){return{dat:'status-dat',khong_dat:'status-khong-dat',thoat:'status-thoat'}[normalizeMemberStatus(value)]}
+export function validateMember(member={}){const errors={};const idCode=String(member.id_code??'').trim();const name=String(member.name??'').trim();const facebookUrl=normalizeFacebookUrl(member.facebook_url??'');const joinedAt=String(member.joined_at??'').trim();const status=normalizeMemberStatus(member.status??'dat');if(!idCode)errors.id_code='Vui lòng nhập ID.';if(!name)errors.name='Vui lòng nhập tên.';if(!facebookUrl)errors.facebook_url='Link Facebook không hợp lệ.';if(!/^\d{4}-\d{2}-\d{2}$/.test(joinedAt))errors.joined_at='Vui lòng chọn ngày vào.';return{ok:Object.keys(errors).length===0,errors,value:{id_code:idCode,name,facebook_url:facebookUrl,joined_at:joinedAt,status}}}
+export function matchesMemberSearch(member={},query=''){const needle=stripDiacritics(String(query).trim().toLowerCase());if(!needle)return true;const haystack=stripDiacritics(`${member.id_code??''} ${member.name??''}`.toLowerCase());return haystack.includes(needle)}
+export function safeFileName(fileName=''){const raw=String(fileName).trim();const i=raw.lastIndexOf('.');const ext=i>-1?raw.slice(i+1).toLowerCase().replace(/[^a-z0-9]/g,''):'';const base=i>-1?raw.slice(0,i):raw;const cleaned=stripDiacritics(base).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'profile';return ext?`${cleaned}.${ext}`:cleaned}
+export function formatStatusTransition(oldStatus,newStatus){return `${memberStatusLabel(oldStatus)} → ${memberStatusLabel(newStatus)}`}
+export function formatDateTimeVN(value){if(!value)return'—';const date=new Date(value);if(Number.isNaN(date.getTime()))return'—';const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Ho_Chi_Minh',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(date);const get=t=>parts.find(p=>p.type===t)?.value||'';return `${get('day')}/${get('month')}/${get('year')}, ${get('hour')}:${get('minute')}`}
+export function normalizeFriendIds(ids=[],selfId='',members=[]){const valid=new Set(members.map(m=>String(m.id)));const seen=new Set();return ids.map(String).filter(id=>id&&id!==String(selfId)&&valid.has(id)&&!seen.has(id)&&(seen.add(id),true))}
+export function canonicalFriendPair(a,b){const x=String(a),y=String(b);if(!x||!y||x===y)return null;return x<y?[x,y]:[y,x]}
+export function friendIdsForMember(memberId,links=[]){const out=[];for(const link of links){const a=Array.isArray(link)?link[0]:link.member_a_id;const b=Array.isArray(link)?link[1]:link.member_b_id;if(a===memberId)out.push(b);else if(b===memberId)out.push(a)}return [...new Set(out)]}
+export function buildFriendGroups(members=[],links=[]){const byId=new Map(members.map(m=>[m.id,m]));const graph=new Map(members.map(m=>[m.id,new Set()]));for(const link of links){const a=Array.isArray(link)?link[0]:link.member_a_id;const b=Array.isArray(link)?link[1]:link.member_b_id;if(!byId.has(a)||!byId.has(b)||a===b)continue;graph.get(a).add(b);graph.get(b).add(a)}const seen=new Set(),groups=[];for(const m of members){if(seen.has(m.id)||graph.get(m.id).size===0)continue;const stack=[m.id],names=[];seen.add(m.id);while(stack.length){const id=stack.pop();names.push(byId.get(id).name);for(const next of graph.get(id))if(!seen.has(next)){seen.add(next);stack.push(next)}}groups.push(names)}return groups}
