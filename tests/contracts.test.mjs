@@ -44,6 +44,7 @@ test('Supabase SQL enables RLS, anon select, admin-only writes, storage policies
   assert.match(sql, /status\s+text/i);
   assert.match(sql, /khong_dat/i);
   assert.match(sql, /member_status_logs/i);
+  assert.match(sql, /member_status_logs_member_id_idx/i);
   assert.match(sql, /log_member_status_change/i);
   assert.match(sql, /revoke\s+execute\s+on\s+function\s+public\.log_member_status_change\(\)\s+from\s+public,\s*anon,\s*authenticated/i);
 });

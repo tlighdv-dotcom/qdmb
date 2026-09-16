@@ -38,6 +38,7 @@ create table if not exists public.member_status_logs (
   changed_at timestamptz not null default now()
 );
 create index if not exists member_status_logs_changed_at_idx on public.member_status_logs(changed_at desc);
+create index if not exists member_status_logs_member_id_idx on public.member_status_logs(member_id);
 
 create or replace function public.log_member_status_change()
 returns trigger
